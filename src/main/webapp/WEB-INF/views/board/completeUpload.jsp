@@ -5,7 +5,7 @@
 </head>
 <body>
 <script type="text/javascript">
-    opener.document.getElementById('previewimg').setAttribute('src', '/images/' + '${savefilename}');
+    opener.document.getElementById('previewimg').setAttribute('src', '${savefilename}');
     opener.document.getElementById('previewimg').style.display='inline'; // 이미지 미리보기
 
     opener.document.insertBoard.image.value='${image}';

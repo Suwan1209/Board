@@ -3,6 +3,7 @@ package com.himedia.board.controller;
 import com.himedia.board.dto.BoardDto;
 import com.himedia.board.dto.Paging;
 import com.himedia.board.service.BoardService;
+import com.himedia.board.service.S3UploadService;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -105,6 +106,24 @@ public class BoardController {
         return "board/selectimg";
     }
 
+    @Autowired
+    S3UploadService sus;
+
+    @PostMapping("/fileupload")
+    public String fileupload(@RequestParam("image") MultipartFile file,
+                             HttpServletRequest request, Model model) {
+        try {
+            // 파일 업로드 후 경로와 파일명을 리턴
+            String uploadFilePathName = sus.saveFile(file);
+            String filename = file.getOriginalFilename();
+            model.addAttribute("image", filename);
+            model.addAttribute("savefilename", uploadFilePathName);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return "board/completeUpload";
+    }
+    /*
     @PostMapping("/fileupload")
     public String fileupload(@RequestParam("image") MultipartFile file,
                                    HttpServletRequest request, Model model) {
@@ -126,6 +145,7 @@ public class BoardController {
         model.addAttribute("savefilename", saveFilename); // 서버에 저장되는 이름
         return "board/completeUpload";
     }
+     */
 
     @PostMapping("/insertBoard")
     public String insertBoard(@ModelAttribute("dto") @Valid BoardDto boarddto, BindingResult result, Model model) {
